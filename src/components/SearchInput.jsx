@@ -1,18 +1,16 @@
 import { useState } from "react"
 import { SearchIcon } from "../assets/Icons"
-import useFetch from "../hooks/useFetch"
+import { useNavigate } from "react-router-dom";
 
 const SearchInput = () => {
   const [searchQuery, setSearchQuery] = useState('')
-  const URL = import.meta.env.VITE_URL
-
-  const { data, loading, error } = useFetch(URL, searchQuery)
-
-  console.log(data)
+  const navigate = useNavigate()
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    setSearchQuery(e.target.elements.SearchQuery.value)
+    if (searchQuery.trim() !== '') {
+      navigate(`/results/search/${searchQuery}`)
+    }
   }
 
   return (
@@ -23,6 +21,8 @@ const SearchInput = () => {
         type="text"
         name="SearchQuery"
         id="SearchQuery"
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
         placeholder="Enter your keywords..."
         className="text-sm sm:text-base w-full rounded-full border border-gray-200 pe-10 py-3 sm:p-3 dark:border-neutral-900 dark:bg-neutral-900 dark:text-gray-300 focus:ring-0 focus:outline-none focus:border-neutral-500 transition-colors"
       />
@@ -32,14 +32,6 @@ const SearchInput = () => {
       >
         <SearchIcon />
       </span>
-
-      {/* <div className="w-full h-fit">
-        {data ? data.map((photo) => (
-          <article key={photo}>
-
-          </article>
-        ))}
-      </div> */}
     </form>
   )
 }

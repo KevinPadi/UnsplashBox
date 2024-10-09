@@ -9,14 +9,12 @@ const useFetch = (url, searchQuery) => {
   const setLoading = useStore((state) => state.setLoading)
   const setError = useStore((state) => state.setError)
 
-
   useEffect(() => {
     const fetchData = async () => {
       if (searchQuery !== "") {
-        console.log(`${url}/search/photos?query=${searchQuery}`)
         setLoading(true);
         try {
-          const res = await fetch(`${url}/search/photos?query=${searchQuery}`, {
+          const res = await fetch(`${url}/search/photos?order_by=popular&query=${searchQuery}`, {
             method: "GET",
             headers: {
               "Accept-Version": "v1",
@@ -26,7 +24,7 @@ const useFetch = (url, searchQuery) => {
           const result = await res.json();
           const formattedData = result.results.map((photo) => ({
             id: photo.id,
-            imageUrl: photo.urls.thumb,
+            imageUrl: photo.urls.regular,
             description: photo.alt_description || "No description",
             blurHash: photo.blur_hash,
             photographer: {
@@ -35,6 +33,7 @@ const useFetch = (url, searchQuery) => {
               profileImage: photo.user.profile_image.small,
             },
             download: photo.links.download,
+            downloadLocation: photo.links.download_location,
           }));
           setData(formattedData);
           console.log(formattedData)

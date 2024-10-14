@@ -12,7 +12,7 @@ const HomePage = () => {
           Search high-resolution images from Unsplash
         </p>
 
-        <SearchInput />
+        <SearchInput variant='home' />
 
       </div>
     </section >

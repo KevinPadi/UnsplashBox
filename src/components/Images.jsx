@@ -1,7 +1,10 @@
 /* eslint-disable react/prop-types */
+import { useState, useEffect } from "react"
 import { DownloadIcon } from "../assets/Icons"
+import { Blurhash } from "react-blurhash"
 
 const Images = ({ photo }) => {
+  const [imageLoaded, setImageLoaded] = useState(false)
 
   const downloadImage = (downloadUrl, imageDescription) => {
     const forcedDownloadUrl = `${downloadUrl}&force=true`
@@ -13,6 +16,14 @@ const Images = ({ photo }) => {
     a.click()
     a.remove()
   }
+
+  useEffect(() => {
+    const img = new Image()
+    img.onload = () => {
+      setImageLoaded(true)
+    }
+    img.src = photo.imageUrl
+  }, [photo.imageUrl])
 
   return (
     <article className="relative w-full h-auto rounded-md overflow-hidden mb-4">
@@ -27,7 +38,29 @@ const Images = ({ photo }) => {
           </button>
         </div>
       </div>
-      <img className="size-full object-cover" src={photo.imageUrl} alt={photo.description} />
+
+      <div className={`${imageLoaded ? 'hidden' : 'block'}`}
+        style={{
+          width: '100%',
+          aspectRatio: `${photo.width} / ${photo.height}`,
+        }}>
+        <Blurhash
+          className="rounded scale-105"
+          width='100%'
+          height='100%'
+          resolutionX={32}
+          resolutionY={32}
+          hash={photo.blurHash}
+          punch={1}
+        />
+      </div>
+
+      <img
+        className="w-full object-cover"
+        src={photo.imageUrl}
+        alt={photo.description}
+        style={{ display: !imageLoaded ? 'none' : 'block' }}
+      />
     </article>
   )
 }

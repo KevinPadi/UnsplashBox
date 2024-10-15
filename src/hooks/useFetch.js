@@ -34,6 +34,8 @@ const useFetch = (url, searchQuery) => {
             },
             download: photo.links.download,
             downloadLocation: photo.links.download_location,
+            width: photo.width,
+            height: photo.height
           }));
           setData(formattedData);
           console.log(formattedData)
